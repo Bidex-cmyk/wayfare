@@ -29,6 +29,7 @@ type DepthMetric struct {
 }
 
 var defaultDepthSizes = []decimal.Decimal{
+	decimal.RequireFromString("0.1"),
 	decimal.NewFromInt(1),
 	decimal.NewFromInt(10),
 	decimal.NewFromInt(100),

@@ -1069,6 +1069,66 @@ func TestDepthMetricDescriptorIsValid(t *testing.T) {
 	}
 }
 
+// TestDepthDefaultSizesIncludeDust verifies that the default depth sizes
+// include 0.1 (the dust size), which isolates the structural floor where
+// price impact is negligible.
+func TestDepthDefaultSizesIncludeDust(t *testing.T) {
+	dust := decimal.RequireFromString("0.1")
+	found := false
+	for _, s := range defaultDepthSizes {
+		if s.Equal(dust) {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("defaultDepthSizes = %v, want it to include 0.1 (the dust size)", defaultDepthSizes)
+	}
+}
+
+// TestDepthExecutableMeasuresDustSize verifies that when no custom sizes
+// are provided, the executable depth metric probes at 0.1 USDC.
+func TestDepthExecutableMeasuresDustSize(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		amount := r.URL.Query().Get("source_amount")
+		d, err := decimal.NewFromString(amount)
+		if err != nil {
+			http.Error(w, "bad amount", http.StatusBadRequest)
+			return
+		}
+		dest := d.Mul(decimal.RequireFromString("1300"))
+		_, _ = w.Write([]byte(`{"_embedded":{"records":[{
+			"source_asset_type":"credit_alphanum4","source_asset_code":"USDC",
+			"source_amount":"` + amount + `",
+			"destination_asset_type":"credit_alphanum4","destination_asset_code":"NGNC",
+			"destination_amount":"` + dest.String() + `","path":[]}]}}`))
+	}))
+	defer srv.Close()
+
+	c := &dex.Client{HorizonURL: srv.URL}
+	depth := DepthMetric{DEX: c}
+	r := depth.RunExecutable(ctx(), Subject{
+		Send:    asset.USDC(),
+		Receive: asset.NGNC(),
+	})
+
+	if !r.Determined {
+		t.Fatalf("depth executable metric undetermined: %s", r.Reason)
+	}
+	if !r.Value.IsPositive() {
+		t.Errorf("executable amount = %s, want positive", r.Value)
+	}
+	// The metric should have probed 6 sizes (including 0.1)
+	if len(r.Evidence) == 0 {
+		t.Error("no evidence recorded")
+	} else {
+		e := r.Evidence[0]
+		if !strings.Contains(e.Observed, "priced_at=6/6") {
+			t.Errorf("Evidence[0].Observed = %q, want it to show 6 of 6 sizes priced", e.Observed)
+		}
+	}
+}
+
 // structural undetermined reasons ----------------------------------------------
 //
 // GHSC is DERIVATIVE — every path runs through NGNC — and KESC is NO-MARKET.
