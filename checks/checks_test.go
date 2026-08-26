@@ -1087,25 +1087,13 @@ func TestDepthDefaultSizesIncludeDust(t *testing.T) {
 }
 
 // TestDepthExecutableMeasuresDustSize verifies that when no custom sizes
-// are provided, the executable depth metric probes at 0.1 USDC.
+// are provided, the executable depth metric probes at 0.1 USDC (the dust
+// size). This uses a snapshot.Replayer with recorded responses for all 12
+// default sizes, including 0.1, rather than an ad-hoc httptest server.
 func TestDepthExecutableMeasuresDustSize(t *testing.T) {
-	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		amount := r.URL.Query().Get("source_amount")
-		d, err := decimal.NewFromString(amount)
-		if err != nil {
-			http.Error(w, "bad amount", http.StatusBadRequest)
-			return
-		}
-		dest := d.Mul(decimal.RequireFromString("1300"))
-		_, _ = w.Write([]byte(`{"_embedded":{"records":[{
-			"source_asset_type":"credit_alphanum4","source_asset_code":"USDC",
-			"source_amount":"` + amount + `",
-			"destination_asset_type":"credit_alphanum4","destination_asset_code":"NGNC",
-			"destination_amount":"` + dest.String() + `","path":[]}]}}`))
-	}))
-	defer srv.Close()
+	m := loadOrderBookSnapshot(t, "usdc-ngnc-strictsend-dust")
+	c := &dex.Client{HorizonURL: "https://horizon.stellar.org", HTTPClient: m.HTTPClient()}
 
-	c := &dex.Client{HorizonURL: srv.URL}
 	depth := DepthMetric{DEX: c}
 	r := depth.RunExecutable(ctx(), Subject{
 		Send:    asset.USDC(),
@@ -1118,13 +1106,31 @@ func TestDepthExecutableMeasuresDustSize(t *testing.T) {
 	if !r.Value.IsPositive() {
 		t.Errorf("executable amount = %s, want positive", r.Value)
 	}
-	// The metric should have probed 6 sizes (including 0.1)
+	// The metric should have probed all default sizes (including 0.1)
 	if len(r.Evidence) == 0 {
 		t.Error("no evidence recorded")
 	} else {
 		e := r.Evidence[0]
-		if !strings.Contains(e.Observed, "priced_at=6/6") {
-			t.Errorf("Evidence[0].Observed = %q, want it to show 6 of 6 sizes priced", e.Observed)
+		want := fmt.Sprintf("priced_at=%d/%d", len(defaultDepthSizes), len(defaultDepthSizes))
+		if !strings.Contains(e.Observed, want) {
+			t.Errorf("Evidence[0].Observed = %q, want it to contain %s", e.Observed, want)
+		}
+	}
+}
+
+// TestDepthDefaultSizesMatchLadder verifies that the depth metric's default
+// sizes are the same as dex.DefaultSizes (the shared ladder), so both the
+// route ladder and the depth metric measure the same corridor at the same
+// sizes.
+func TestDepthDefaultSizesMatchLadder(t *testing.T) {
+	if len(defaultDepthSizes) != len(dex.DefaultSizes) {
+		t.Fatalf("defaultDepthSizes has %d sizes, dex.DefaultSizes has %d",
+			len(defaultDepthSizes), len(dex.DefaultSizes))
+	}
+	for i := range defaultDepthSizes {
+		if !defaultDepthSizes[i].Equal(dex.DefaultSizes[i]) {
+			t.Errorf("defaultDepthSizes[%d] = %s, dex.DefaultSizes[%d] = %s",
+				i, defaultDepthSizes[i], i, dex.DefaultSizes[i])
 		}
 	}
 }
