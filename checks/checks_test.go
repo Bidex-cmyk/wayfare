@@ -1248,7 +1248,8 @@ type depthExecutable struct{ DepthMetric }
 
 func (m depthExecutable) Describe() Descriptor {
 	return Descriptor{
-		ID: "depth.executable", Title: "executable depth",
+		ID: "depth.executable", Scope: ScopeCorridor, Venue: VenuePathfinding,
+		Title:        "executable depth",
 		CanDetermine: "see DepthMetric", CannotDetermine: "see DepthMetric",
 	}
 }
