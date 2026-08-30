@@ -1,0 +1,162 @@
+{
+  "format": "wayfare.snapshot",
+  "version": 1,
+  "recorded_at": "2026-08-23T00:00:00Z",
+  "corridor": {
+    "send": {
+      "code": "USDC",
+      "issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"
+    },
+    "receive": {
+      "code": "NGNC",
+      "issuer": "GASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6"
+    },
+    "reference_pair": ""
+  },
+  "sizes": ["0.1", "1", "5", "10", "25", "50", "100", "250", "500", "1000", "2500", "5000"],
+  "sources": {
+    "horizon": {
+      "base_url": "https://horizon.stellar.org"
+    },
+    "reference": {
+      "base_url": ""
+    }
+  },
+  "notes": [
+    "Strict-send path responses for depth executable metric dust-size tests. All 12 default sizes including 0.1."
+  ],
+  "interactions": [
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=0.1&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0001-paths-size-0.1.json",
+      "body_sha256": "sha256:99043794f9281e8942fb5b552841d60a997f347720b1863ad934ec80532628fd"
+    },
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=1&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0002-paths-size-1.json",
+      "body_sha256": "sha256:f40ec71ea8d184d669c280e84f9895ebb82d7bbda765c8eeaffdaed9e22b9909"
+    },
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=5&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0003-paths-size-5.json",
+      "body_sha256": "sha256:b1231efada873d8413b22d78097847dddafb030db55a1decaf21bf82a6c44247"
+    },
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=10&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0004-paths-size-10.json",
+      "body_sha256": "sha256:73f1e56b13419466c026987261deed8cef66935a1363675c130286e26ff5977a"
+    },
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=25&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0005-paths-size-25.json",
+      "body_sha256": "sha256:8ae4401a1a0910d11e3fce1ebb2ea62afddf2c838672beed95988e9fbcb9f1a6"
+    },
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=50&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0006-paths-size-50.json",
+      "body_sha256": "sha256:8e1d4343068118cc7cfda963fc8afcfeb6d244f895b0b2cb2acdaa0df4e55c7e"
+    },
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=100&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0007-paths-size-100.json",
+      "body_sha256": "sha256:08bec580276af474c6d70a516689bad542e8054775a9b2e88ebb57e863942f7e"
+    },
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=250&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0008-paths-size-250.json",
+      "body_sha256": "sha256:fb2dbb5a69081bad35503f8d17beb280badcb77b0feed5c7785725dbd91250b4"
+    },
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=500&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0009-paths-size-500.json",
+      "body_sha256": "sha256:7e37aef4bb88af68fb40cb714b0d6278c3918fac7841f148056f1774b7b9d14f"
+    },
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=1000&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0010-paths-size-1000.json",
+      "body_sha256": "sha256:3e44ad1244023c203d9e29bfc4dd1e868c403110616a71066d62d5549b0575e5"
+    },
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=2500&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0011-paths-size-2500.json",
+      "body_sha256": "sha256:27655e3349238e6af42aff95ccef8f1637385ecd6b47e05186b165019fc2cc20"
+    },
+    {
+      "kind": "horizon",
+      "method": "GET",
+      "key": "GET /paths/strict-send?destination_assets=NGNC%3AGASBV6W7GGED66MXEVC7YZHTWWYMSVYEY35USF2HJZBLABLYIFQGXZY6&source_amount=5000&source_asset_code=USDC&source_asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&source_asset_type=credit_alphanum4",
+      "url": "https://horizon.stellar.org/paths/strict-send",
+      "status": 200,
+      "content_type": "application/hal+json",
+      "recorded_at": "2026-08-23T00:00:00Z",
+      "body_file": "responses/0012-paths-size-5000.json",
+      "body_sha256": "sha256:a91f62299abae437b13e117e5962073b45b66fa0063ee2ffad0f2e933f774fa0"
+    }
+  ]
+}
