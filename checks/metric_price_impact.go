@@ -131,7 +131,7 @@ func (m PriceImpactMetric) sizes() []decimal.Decimal {
 // by returning the maximum impact observed.
 func (m PriceImpactMetric) RunCurve(ctx context.Context, s Subject) (*PriceImpactCurve, MetricResult) {
 	d := m.Describe()
-	at := time.Now().UTC()
+	zeit := time.Now().UTC()
 
 	if s.Send.Code == "" || s.Receive.Code == "" {
 		return nil, MetricUndetermined(d, s, "no send or receive asset specified")
@@ -144,6 +144,8 @@ func (m PriceImpactMetric) RunCurve(ctx context.Context, s Subject) (*PriceImpac
 			"%s has no path to %s by construction (NO-MARKET): there is no rate at "+
 				"any size for a curve of probe sizes to measure degradation between",
 			s.Send.Code, s.Receive.Code))
+				"any size for a probe-to-full comparison to measure degradation between",
+				s.Send.Code, s.Receive.Code))
 	}
 	if m.DEX == nil {
 		return nil, MetricUndetermined(d, s, "no DEX client available to price paths")
@@ -152,11 +154,18 @@ func (m PriceImpactMetric) RunCurve(ctx context.Context, s Subject) (*PriceImpac
 	sizes := m.sizes()
 	if len(sizes) == 0 {
 		return nil, MetricUndetermined(d, s, "no sizes to probe")
+	probe := m.ProbeSize
+	if probe.IsZero() || probe.IsNegative() || !probe.IsPositive() {
+		return MetricUndetermined(d, s, "probe size is unset or invalid (must be greater than zero)")
+	}
+	full := m.FullSize
+	if full.IsZero() || full.IsNegative() || !full.IsPositive() {
+		return MetricUndetermined(d, s, "full size is unset or invalid (must be greater than zero)")
 	}
 
 	evidence := Evidence{
 		Source:     fmt.Sprintf("/paths/strict-send %s/%s", s.Send.Code, s.Receive.Code),
-		ObservedAt: at,
+		ObservedAt: zeit,
 	}
 
 	type probeResult struct {
