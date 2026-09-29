@@ -34,6 +34,7 @@ type QuoteJSON struct {
 	LossPct       string   `json:"loss_pct"`
 	LossAmount    string   `json:"loss_amount,omitempty"`
 	Verdict       string   `json:"verdict"`
+	PathCount     int      `json:"path_count,omitempty"`
 	Warnings      []string `json:"warnings"`
 }
 
@@ -60,6 +61,20 @@ type CostBlockJSON struct {
 	TotalLossPct string         `json:"total_loss_pct"`
 }
 
+type ExecutionRatePointJSON struct {
+	Size   string `json:"size"`
+	Rate   string `json:"rate,omitempty"`
+	Priced bool   `json:"priced"`
+	Reason string `json:"reason,omitempty"`
+}
+
+type ExecutionRateCurveJSON struct {
+	Points           []ExecutionRatePointJSON `json:"points"`
+	PricedCount      int                      `json:"priced_count"`
+	ObservationCount int                      `json:"observation_count"`
+	NonMonotonic     bool                     `json:"non_monotonic"`
+}
+
 type RungJSON struct {
 	SendAmount   string         `json:"send_amount"`
 	MarginalCost string         `json:"marginal_cost,omitempty"`
@@ -67,6 +82,7 @@ type RungJSON struct {
 	MarginalTo   string         `json:"marginal_to,omitempty"`
 	Priced       bool           `json:"priced"`
 	Integrity    string         `json:"integrity"`
+	PathCount    int            `json:"path_count,omitempty"`
 	Quote        *QuoteJSON     `json:"quote"`
 	Cost         *CostBlockJSON `json:"cost,omitempty"`
 	Notes        []string       `json:"notes"`
@@ -97,6 +113,14 @@ type CorridorJSON struct {
 	ReferenceDivergencePct   string `json:"reference_divergence_pct,omitempty"`
 	ReferenceNote            string `json:"reference_note,omitempty"`
 	Scored                   bool   `json:"scored"`
+
+	// ReferenceAsOf is the upstream provider's rate timestamp. Omitted if
+	// the provider provided no timestamp.
+	ReferenceAsOf string `json:"reference_as_of,omitempty"`
+
+	// ReferenceSecondaryAsOf is the second provider's rate timestamp.
+	// Omitted if absent.
+	ReferenceSecondaryAsOf string `json:"reference_secondary_as_of,omitempty"`
 
 	// ReferenceFetchedAt is when the rate was last obtained from the
 	// provider, which differs from reference_as_of: as-of is the upstream's
@@ -145,9 +169,10 @@ type CorridorJSON struct {
 	// and nothing here feeds back into either.
 	Findings *checks.FindingsJSON `json:"findings,omitempty"`
 
-	Finding    string     `json:"finding"`
-	Rungs      []RungJSON `json:"rungs"`
-	MeasuredAt string     `json:"measured_at"`
+	Finding    string                  `json:"finding"`
+	Curve      *ExecutionRateCurveJSON `json:"curve"`
+	Rungs      []RungJSON              `json:"rungs"`
+	MeasuredAt string                  `json:"measured_at"`
 }
 
 // StaleJSON labels a reading served from history rather than measured now.
@@ -212,6 +237,7 @@ func ToQuoteJSON(q *Quote) *QuoteJSON {
 		LossPct:       q.LossPct.String(),
 		LossAmount:    q.LossAmount.StringFixed(2),
 		Verdict:       q.Verdict.String(),
+		PathCount:     q.PathCount,
 		Warnings:      w,
 	}
 }
@@ -266,9 +292,15 @@ func ToCorridorJSON(l *LadderResult, pair string) CorridorJSON {
 		Rungs:              make([]RungJSON, 0, len(l.Rungs)),
 		MeasuredAt:         time.Now().UTC().Format(time.RFC3339),
 	}
+	if !l.Reference.AsOf.IsZero() {
+		out.ReferenceAsOf = l.Reference.AsOf.UTC().Format(time.RFC3339)
+	}
 	if !l.Reference.SecondaryMid.IsZero() {
 		out.ReferenceSecondaryMid = l.Reference.SecondaryMid.String()
 		out.ReferenceSecondarySource = l.Reference.SecondarySource
+	}
+	if !l.Reference.SecondaryAsOf.IsZero() {
+		out.ReferenceSecondaryAsOf = l.Reference.SecondaryAsOf.UTC().Format(time.RFC3339)
 	}
 	if !l.Reference.FetchedAt.IsZero() {
 		out.ReferenceFetchedAt = l.Reference.FetchedAt.UTC().Format(time.RFC3339)
@@ -289,6 +321,22 @@ func ToCorridorJSON(l *LadderResult, pair string) CorridorJSON {
 	if l.Recommended != nil {
 		out.RecommendedSize = l.RecommendedSize.String()
 	}
+	if l.Curve != nil {
+		out.Curve = &ExecutionRateCurveJSON{
+			Points:           make([]ExecutionRatePointJSON, 0, len(l.Curve.Points)),
+			PricedCount:      l.Curve.PricedCount,
+			ObservationCount: l.Curve.ObservationCount,
+			NonMonotonic:     l.Curve.NonMonotonic,
+		}
+		for _, p := range l.Curve.Points {
+			point := ExecutionRatePointJSON{Size: p.Size.String(), Priced: p.Priced, Reason: p.Reason}
+			if p.Priced {
+				point.Rate = p.Rate.String()
+			}
+			out.Curve.Points = append(out.Curve.Points, point)
+		}
+	}
+
 	for _, d := range l.DependsOn {
 		out.DependsOn = append(out.DependsOn, ToAssetJSON(d))
 	}
@@ -314,7 +362,9 @@ func ToCorridorJSON(l *LadderResult, pair string) CorridorJSON {
 				rj.Notes = r.Result.Notes
 			}
 			if len(r.Result.Quotes) > 0 {
-				rj.Quote = ToQuoteJSON(&r.Result.Quotes[0])
+				q := &r.Result.Quotes[0]
+				rj.PathCount = q.PathCount
+				rj.Quote = ToQuoteJSON(q)
 			}
 		}
 		if len(r.Decomposition.Parts) > 0 {

@@ -164,6 +164,31 @@ func TestTrendWithNoHistoryIsEmptyNotError(t *testing.T) {
 	}
 }
 
+// TestTrendRejectsUnknownQueryParams pins the A5 strictness contract on the
+// trend endpoint too: a typo like ?t=NGNC must be a 400 rather than a
+// silently-read history for the default corridor.
+func TestTrendRejectsUnknownQueryParams(t *testing.T) {
+	srv := trendServer(t, nil)
+
+	cases := map[string]string{
+		"typo":     "?t=NGNC",
+		"extra":    "?to=NGNC&debug=1",
+		"multiple": "?to=NGNC&t=NGNC&page=2",
+	}
+	for name, q := range cases {
+		t.Run(name, func(t *testing.T) {
+			status, body := getJSON(t, srv.URL+"/api/corridor/trend"+q)
+			if status != http.StatusBadRequest {
+				t.Fatalf("status = %d, want 400", status)
+			}
+			msg, _ := body["error"].(string)
+			if !strings.Contains(msg, "unknown query parameter") {
+				t.Errorf("error = %q, want it to say unknown query parameter", msg)
+			}
+		})
+	}
+}
+
 // TestTrendRejectsUnknownAssets pins that the trend endpoint validates its
 // corridor exactly as the measurement endpoint does: an unverified asset is
 // an error rather than a guess at whose history to read.
@@ -363,7 +388,7 @@ func TestTrendDivergenceStatsNegativeValueIsAnError(t *testing.T) {
 
 	status, body := getJSON(t, srv.URL+"/api/corridor/trend?to=NGNC")
 	if status != http.StatusInternalServerError {
-		t.Fatalf("status = %d, want 500 for a negative stored divergence_pct: %v", status, body)
+		t.Fatalf("status = %d, want 500 for a corrupt stored divergence_pct: %v", status, body)
 	}
 	if body["error"] == nil {
 		t.Error("expected an error message")
@@ -446,11 +471,11 @@ func TestUITrendIsSelfContained(t *testing.T) {
 	page := string(raw)
 
 	for _, want := range []string{
-		"/api/corridor/trend", // the endpoint the trend reads
-		"unusable above",      // the 20% threshold, as on the live curve
+		"/api/corridor/trend",                          // the endpoint the trend reads
+		"unusable above",                               // the 20% threshold, as on the live curve
 		"irregular snapshots, not a continuous series", // the honesty caption
-		"scored_against",       // which mid a run was scored against
-		"prefers-color-scheme", // the trend must live in the theme
+		"scored_against",                               // which mid a run was scored against
+		"prefers-color-scheme",                         // the trend must live in the theme
 	} {
 		if !strings.Contains(page, want) {
 			t.Errorf("the trend view lacks %q; it would render incompletely or mislead", want)
