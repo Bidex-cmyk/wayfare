@@ -1,0 +1,61 @@
+{
+  "_embedded": {
+    "records": [
+      {
+        "source_asset_type": "credit_alphanum4",
+        "source_asset_code": "USDC",
+        "source_asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "source_amount": "1.0000000",
+        "destination_asset_type": "credit_alphanum12",
+        "destination_asset_code": "PYUSD",
+        "destination_asset_issuer": "GDQE7IXJ4HUHV6RQHIUPRJSEZE4DRS5WY577O2FY6YQ5LVWZ7JZTU2V5",
+        "destination_amount": "1.0290841",
+        "path": [
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "yXLM",
+            "asset_issuer": "GARDNV3Q7YGT4AKSDF25LT32YSCCW4EV22Y2TV3I2PU2MMXJTEDL5T55"
+          },
+          {
+            "asset_type": "credit_alphanum12",
+            "asset_code": "LUMOS",
+            "asset_issuer": "GB5T2EQC2VDG2XEYQ5C2CQJ2SCB5RFPPWALUU2GQ3R5HUEGOZST55B6S"
+          }
+        ]
+      },
+      {
+        "source_asset_type": "credit_alphanum4",
+        "source_asset_code": "USDC",
+        "source_asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "source_amount": "1.0000000",
+        "destination_asset_type": "credit_alphanum12",
+        "destination_asset_code": "PYUSD",
+        "destination_asset_issuer": "GDQE7IXJ4HUHV6RQHIUPRJSEZE4DRS5WY577O2FY6YQ5LVWZ7JZTU2V5",
+        "destination_amount": "1.0032419",
+        "path": [
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "ACT",
+            "asset_issuer": "GAHHULDPDVGB5WS5PH7BCGLJ7ZHECDBIIMKB62UPVDUOCHNFL7HX3FS7"
+          },
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "AQUA",
+            "asset_issuer": "GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA"
+          }
+        ]
+      },
+      {
+        "source_asset_type": "credit_alphanum4",
+        "source_asset_code": "USDC",
+        "source_asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "source_amount": "1.0000000",
+        "destination_asset_type": "credit_alphanum12",
+        "destination_asset_code": "PYUSD",
+        "destination_asset_issuer": "GDQE7IXJ4HUHV6RQHIUPRJSEZE4DRS5WY577O2FY6YQ5LVWZ7JZTU2V5",
+        "destination_amount": "1.0000159",
+        "path": []
+      }
+    ]
+  }
+}
