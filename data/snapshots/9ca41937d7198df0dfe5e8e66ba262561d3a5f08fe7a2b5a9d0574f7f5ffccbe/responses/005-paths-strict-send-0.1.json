@@ -1,0 +1,39 @@
+{
+  "_embedded": {
+    "records": [
+      {
+        "source_asset_type": "credit_alphanum4",
+        "source_asset_code": "USDC",
+        "source_asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "source_amount": "0.1000000",
+        "destination_asset_type": "credit_alphanum4",
+        "destination_asset_code": "ZARZ",
+        "destination_asset_issuer": "GAROH4EV3WVVTRQKEY43GZK3XSRBEYETRVZ7SVG5LHWOAANSMCTJBB3U",
+        "destination_amount": "2.5245893",
+        "path": [
+          {
+            "asset_type": "credit_alphanum4",
+            "asset_code": "GOLD",
+            "asset_issuer": "GBC5ZGK6MQU3XG5Y72SXPA7P5R5NHYT2475SNEJB2U3EQ6J56QLVGOLD"
+          },
+          {
+            "asset_type": "credit_alphanum12",
+            "asset_code": "xLMNR",
+            "asset_issuer": "GDKA6WVMFSA73BMEVKPO6WXSSWP4MPRBDJVSXLLSEVIEVH226L5RJ7NL"
+          }
+        ]
+      },
+      {
+        "source_asset_type": "credit_alphanum4",
+        "source_asset_code": "USDC",
+        "source_asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "source_amount": "0.1000000",
+        "destination_asset_type": "credit_alphanum4",
+        "destination_asset_code": "ZARZ",
+        "destination_asset_issuer": "GAROH4EV3WVVTRQKEY43GZK3XSRBEYETRVZ7SVG5LHWOAANSMCTJBB3U",
+        "destination_amount": "1.6830136",
+        "path": []
+      }
+    ]
+  }
+}
